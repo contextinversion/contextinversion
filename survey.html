@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>图片评分问卷调查</title>
+<style>
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        text-align: center;
+    }
+    img {
+        max-width: 100%;
+        margin-bottom: 20px;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>图片评分问卷调查</h1>
+    <form id="surveyForm">
+        <!-- 使用JavaScript动态生成图片和评分输入框 -->
+    </form>
+    <button id="submitButton" type="button">提交</button>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var form = document.getElementById("surveyForm");
+        var submitButton = document.getElementById("submitButton");
+
+        var images = [
+            "imgs/CD_SantaClausv2_pandav2.jpg",             "imgs/CD_flowerv1_catv2.jpg",                   "imgs/CI_catv2_bearctx_bearv2.jpg",
+            "imgs/CD_Tshirtv1_cakev1.jpg",                  "imgs/CD_fox_rainbow.jpg",                      "imgs/CI_catv2_mugctx_mugv2.jpg",
+            "imgs/CD_birdv1_huskyv2.jpg",                   "imgs/CD_huskyv1_birdv2.jpg",                   "imgs/CI_disneyv1_disneyctx_castlev1.jpg",
+            "imgs/CD_blueflower_rosev2.jpg",                "imgs/CD_pikachu_cake.jpg",                     "imgs/CI_disneyv2_castlectx_castlev2.jpg",
+            "imgs/CD_buddhav1_horsev2.jpg",                 "imgs/CD_unicorn_SantaClaus.jpg",               "imgs/CI_dragon_dragonctx_valley.jpg",
+            "imgs/CD_cakev2_huskyv2.jpg",                   "imgs/CI_SantaClausv2_pandactx_pandav2.jpg",    "imgs/CI_flowerv1_flowerctx_catv2.jpg",
+            "imgs/CD_catv2_bearv2.jpg",                     "imgs/CI_Tshirtv1_Tshirtctx_cakev1.jpg",        "imgs/CI_fox_rainbowctx_rainbow.jpg",
+            "imgs/CD_catv2_mugv2.jpg",                      "imgs/CI_birdv1_birdctx_huskyv2.jpg",           "imgs/CI_huskyv1_birdv2.jpg",
+            "imgs/CD_disneyv1_castlev1.jpg",                "imgs/CI_blueflower_rosectx_rosev2.jpg",        "imgs/CI_pikachu_cakectx_cake.jpg",
+            "imgs/CD_disneyv2_castlev2.jpg",                "imgs/CI_buddhav1_buddhactx_horsev2.jpg",       "imgs/CI_unicorn_santactx_SantaClaus.jpg",
+            "imgs/CD_dragon_valley.jpg",                    "imgs/CI_cakev2_cake_ctx_huskyv2.jpg",
+        ];
+
+        images.forEach(function(image) {
+            var div = document.createElement("div");
+            var img = document.createElement("img");
+            img.src = image;
+            img.alt = image;
+            div.appendChild(img);
+
+            var label = document.createElement("label");
+            label.textContent = "评分(1-7)：";
+            div.appendChild(label);
+
+            var input = document.createElement("input");
+            input.type = "number";
+            input.name = image;
+            input.min = "1";
+            input.max = "7";
+            input.value = "";
+            input.required = true;
+            div.appendChild(input);
+
+            form.appendChild(div);
+        });
+
+        // 提交按钮点击事件处理
+        submitButton.addEventListener("click", function(event) {
+            event.preventDefault(); // 阻止默认按钮点击行为
+
+            // 检查表单是否有效
+            if (form.checkValidity()) {
+                // 收集用户评分数据
+                var ratings = {};
+                var inputs = form.querySelectorAll("input[type='number']");
+                inputs.forEach(function(input) {
+                    ratings[input.name] = input.value;
+                });
+
+                // 发送POST请求将评分数据提交至后端
+                fetch('http://47.108.116.154:32122/submit-ratings', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(ratings)
+                })
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data); // 输出后端服务器响应的信息
+                    // 清空表单或显示提交成功信息
+                    form.reset();
+                    alert("提交成功！感谢您的参与！");
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert("提交失败，请稍后再试！");
+                });
+            } else {
+                // 如果表单无效，显示提示信息
+                alert("请为每张图片评分！");
+            }
+        });
+    });
+</script>
+</body>
+</html>
