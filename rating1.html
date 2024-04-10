@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rating1: 图像的概念一致性评估</title>
+<style>
+    .container {
+        max-width: 1440px;
+        margin: 0 auto;
+        padding: 20px;
+        text-align: center;
+    }
+    img {
+        max-width: 100%;
+        margin-bottom: 20px;
+        margin-top: 30px;
+    }
+    .rating {
+        display: inline-block;
+        unicode-bidi: bidi-override;
+        color: #888888;
+        font-size: 30px;
+        position: relative;
+        padding: 0;
+        cursor: pointer;
+    }
+    .rating > input {
+        display: none;
+    }
+    .rating > label {
+        float: right;
+        padding: 0 5px;
+        font-size: 30px;
+    }
+    .rating > label:before {
+        content: "\2605";
+    }
+    .rating > input:checked ~ label,
+    .rating:not(:checked) > label:hover ~ label {
+        color: #f7d000;
+    }
+    .rating > input:checked + label:hover,
+    .rating > input:checked ~ label:hover,
+    .rating > label:hover ~ input:checked ~ label,
+    .rating > input:checked ~ label:hover ~ label {
+        color: #ffc700;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>Rating1: 图像的概念一致性评估</h1>
+    <h2>任务目标：每组共10张图像（2行5列），请评估每组图像的相似性，满分是七星，星越多表示相似性越高。</h2>
+    <h2>打完分后点击提交即可。</h2>
+    <form id="surveyForm">
+        <!-- 使用JavaScript动态生成图片和评分输入框 -->
+    </form>
+    <button id="submitButton" type="button">提交</button>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var form = document.getElementById("surveyForm");
+        var submitButton = document.getElementById("submitButton");
+
+        var images = [
+        'out1/DCTX_buddha_plus_plus_v1.jpg',
+        'out1/ICD_castle_hotairballoons_plus_plus_v2.jpg',
+        'out1/ICD_dragen_castle_plus_plus_v1.jpg',
+        'out1/CD_dragon_phoenix0_v1.jpg',
+        'out1/ICD_disney_plus_plus_v2.jpg',
+        'out1/DCTX_bird_flower_plus_plus_v2.jpg',
+        'out1/ICD_castle_hotairballoons_plus_plus_v1.jpg',
+        'out1/DCTX_buddha_plus_plus_v2.jpg',
+        'out1/ICD_dragen_castle_plus_plus_v2.jpg',
+        'out1/CD_dragon_phoenix0_v2.jpg',
+        'out1/ICD_disney_plus_plus_v1.jpg',
+        'out1/DCTX_bird_flower_plus_plus_v1.jpg',
+        'out1/ICD_horse_plus_plus_v1.jpg',
+        'out1/CD_bread_eggs0_v2.jpg',
+        'out1/ICD_monkey_box_plus_plus_v1.jpg',
+        'out1/CD_canada_bear0_v2.jpg',
+        'out1/CD_monkey_box0_v2.jpg',
+        'out1/ICD_camel_pyramid_plus_plus_v1.jpg',
+        'out1/ICD_bird_flower_plus_plus_v1.jpg',
+        'out1/ICD_horse_plus_plus_v2.jpg',
+        'out1/CD_bread_eggs0_v1.jpg',
+        'out1/ICD_monkey_box_plus_plus_v2.jpg',
+        'out1/CD_canada_bear0_v1.jpg',
+        'out1/CD_monkey_box0_v1.jpg',
+        'out1/ICD_camel_pyramid_plus_plus_v2.jpg',
+        'out1/ICD_bird_flower_plus_plus_v2.jpg',
+        'out1/CD_rose_sunflower0_v1.jpg',
+        'out1/ICD_wall_flower_plus_plus_v1.jpg',
+        'out1/DCTX_mug_buildings_plus_plus_v1.jpg',
+        'out1/CD_bird_flower0_v1.jpg',
+        'out1/CD_camel_pyramid0_v1.jpg',
+        'out1/ICD_dragon_phoenix_plus_plus_v1.jpg',
+        'out1/ICD_penguin_clock_plus_plus_v2.jpg',
+        'out1/DCTX_cat_sculpture_plus_plus_v1.jpg',
+        'out1/DCTX_monkey_box_plus_plus_v2.jpg',
+        'out1/CD_rose_sunflower0_v2.jpg',
+        'out1/ICD_wall_flower_plus_plus_v2.jpg',
+        'out1/DCTX_mug_buildings_plus_plus_v2.jpg',
+        'out1/CD_bird_flower0_v2.jpg',
+        'out1/CD_camel_pyramid0_v2.jpg',
+        'out1/ICD_dragon_phoenix_plus_plus_v2.jpg',
+        'out1/ICD_penguin_clock_plus_plus_v1.jpg',
+        'out1/DCTX_cat_sculpture_plus_plus_v2.jpg',
+        'out1/DCTX_monkey_box_plus_plus_v1.jpg',
+        'out1/DCTX_wall_flower_plus_plus_v2.jpg',
+        'out1/ICD_buddha_plus_plus_v1.jpg',
+        'out1/ICD_Tshirt_butterfly_plus_plus_v2.jpg',
+        'out1/DCTX_rainbow_panda_plus_plus_v1.jpg',
+        'out1/CD_horse0_v2.jpg',
+        'out1/DCTX_disney_plus_plus_v2.jpg',
+        'out1/DCTX_dragon_phoenix_plus_plus_v2.jpg',
+        'out1/DCTX_wall_flower_plus_plus_v1.jpg',
+        'out1/ICD_buddha_plus_plus_v2.jpg',
+        'out1/ICD_Tshirt_butterfly_plus_plus_v1.jpg',
+        'out1/DCTX_rainbow_panda_plus_plus_v2.jpg',
+        'out1/CD_horse0_v1.jpg',
+        'out1/DCTX_disney_plus_plus_v1.jpg',
+        'out1/DCTX_dragon_phoenix_plus_plus_v1.jpg',
+        'out1/ICD_pizza_beer_plus_plus_v2.jpg',
+        'out1/DCTX_Tshirt_butterfly_plus_plus_v2.jpg',
+        'out1/CD_disney0_v1.jpg',
+        'out1/CD_dragen_castle0_v2.jpg',
+        'out1/CD_tiger_painting0_v1.jpg',
+        'out1/DCTX_camel_pyramid_plus_plus_v1.jpg',
+        'out1/CD_buddha0_v1.jpg',
+        'out1/CD_castle_hotairballoons0_v1.jpg',
+        'out1/ICD_bread_eggs_plus_plus_v2.jpg',
+        'out1/CD_SantaClaus0_v2.jpg',
+        'out1/DCTX_canada_bear_plus_plus_v1.jpg',
+        'out1/CD_husky_wall0_v2.jpg',
+        'out1/DCTX_castle_hotairballoons_plus_plus_v2.jpg',
+        'out1/ICD_pizza_beer_plus_plus_v1.jpg',
+        'out1/CD_disney0_v2.jpg',
+        'out1/DCTX_Tshirt_butterfly_plus_plus_v1.jpg',
+        'out1/CD_dragen_castle0_v1.jpg',
+        'out1/CD_tiger_painting0_v2.jpg',
+        'out1/DCTX_camel_pyramid_plus_plus_v2.jpg',
+        'out1/CD_buddha0_v2.jpg',
+        'out1/CD_castle_hotairballoons0_v2.jpg',
+        'out1/ICD_bread_eggs_plus_plus_v1.jpg',
+        'out1/DCTX_canada_bear_plus_plus_v2.jpg',
+        'out1/CD_SantaClaus0_v1.jpg',
+        'out1/CD_husky_wall0_v1.jpg',
+        'out1/DCTX_castle_hotairballoons_plus_plus_v1.jpg',
+        'out1/CD_cat_sculpture0_v2.jpg',
+        'out1/ICD_cake_cat_plus_plus_v2.jpg',
+        'out1/DCTX_SantaClaus_plus_plus_v2.jpg',
+        'out1/CD_penguin_clock0_v2.jpg',
+        'out1/DCTX_horse_plus_plus_v1.jpg',
+        'out1/ICD_canada_bear_plus_plus_v2.jpg',
+        'out1/DCTX_dragen_castle_plus_plus_v1.jpg',
+        'out1/ICD_husky_wall_plus_plus_v1.jpg',
+        'out1/CD_pizza_beer0_v1.jpg',
+        'out1/CD_wall_flower0_v2.jpg',
+        'out1/CD_cat_sculpture0_v1.jpg',
+        'out1/ICD_cake_cat_plus_plus_v1.jpg',
+        'out1/DCTX_SantaClaus_plus_plus_v1.jpg',
+        'out1/CD_penguin_clock0_v1.jpg',
+        'out1/DCTX_horse_plus_plus_v2.jpg',
+        'out1/ICD_canada_bear_plus_plus_v1.jpg',
+        'out1/DCTX_dragen_castle_plus_plus_v2.jpg',
+        'out1/ICD_husky_wall_plus_plus_v2.jpg',
+        'out1/CD_pizza_beer0_v2.jpg',
+        'out1/CD_wall_flower0_v1.jpg',
+        'out1/DCTX_husky_wall_plus_plus_v2.jpg',
+        'out1/DCTX_rose_sunflower_plus_plus_v2.jpg',
+        'out1/DCTX_tiger_painting_plus_plus_v1.jpg',
+        'out1/DCTX_cake_cat_plus_plus_v2.jpg',
+        'out1/CD_cake_cat0_v2.jpg',
+        'out1/CD_Tshirt_butterfly0_v2.jpg',
+        'out1/CD_rainbow_panda0_v2.jpg',
+        'out1/ICD_SantaClaus_plus_plus_v1.jpg',
+        'out1/ICD_rainbow_panda_plus_plus_v1.jpg',
+        'out1/DCTX_husky_wall_plus_plus_v1.jpg',
+        'out1/DCTX_rose_sunflower_plus_plus_v1.jpg',
+        'out1/DCTX_tiger_painting_plus_plus_v2.jpg',
+        'out1/DCTX_cake_cat_plus_plus_v1.jpg',
+        'out1/CD_cake_cat0_v1.jpg',
+        'out1/CD_Tshirt_butterfly0_v1.jpg',
+        'out1/CD_rainbow_panda0_v1.jpg',
+        'out1/ICD_SantaClaus_plus_plus_v2.jpg',
+        'out1/ICD_rainbow_panda_plus_plus_v2.jpg',
+        'out1/DCTX_penguin_clock_plus_plus_v2.jpg',
+        'out1/DCTX_bread_eggs_plus_plus_v1.jpg',
+        'out1/ICD_tiger_painting_plus_plus_v2.jpg',
+        'out1/ICD_rose_sunflower_plus_plus_v1.jpg',
+        'out1/ICD_cat_sculpture_plus_plus_v1.jpg',
+        'out1/CD_mug_buildings0_v2.jpg',
+        'out1/DCTX_pizza_beer_plus_plus_v1.jpg',
+        'out1/ICD_mug_buildings_plus_plus_v1.jpg',
+        'out1/DCTX_penguin_clock_plus_plus_v1.jpg',
+        'out1/DCTX_bread_eggs_plus_plus_v2.jpg',
+        'out1/ICD_tiger_painting_plus_plus_v1.jpg',
+        'out1/ICD_rose_sunflower_plus_plus_v2.jpg',
+        'out1/ICD_cat_sculpture_plus_plus_v2.jpg',
+        'out1/CD_mug_buildings0_v1.jpg',
+        'out1/DCTX_pizza_beer_plus_plus_v2.jpg',
+        'out1/ICD_mug_buildings_plus_plus_v2.jpg',
+        ];
+
+        images.forEach(function(image,index) {
+            var div = document.createElement("div");
+            var img = document.createElement("img");
+            img.src = image;
+            img.alt = image;
+            div.appendChild(img);
+
+            var label = document.createElement("label");
+            label.textContent = "评分：";
+            div.appendChild(label);
+
+            var rating = document.createElement("div");
+            rating.className = "rating";
+            for (var i = 7; i >= 1; i--) {
+                var input = document.createElement("input");
+                input.type = "radio";
+                input.id = `star${index}_${i}`; // 修改这里，添加了索引
+                input.name = image;
+                input.value = i;
+                rating.appendChild(input);
+
+                var label = document.createElement("label");
+                label.htmlFor = `star${index}_${i}`; // 修改这里，添加了索引
+                label.title = `${i} star`;
+                rating.appendChild(label);
+            }
+            div.appendChild(rating);
+
+            form.appendChild(div);
+        });
+
+        // 提交按钮点击事件处理
+        submitButton.addEventListener("click", function(event) {
+            event.preventDefault(); // 阻止默认按钮点击行为
+
+            // 检查表单是否有效
+            if (form.checkValidity()) {
+                // 收集用户评分数据
+                var ratings = {};
+                var inputs = form.querySelectorAll(".rating input:checked");
+                inputs.forEach(function(input) {
+                    ratings[input.name] = input.value;
+                });
+
+                // 发送POST请求将评分数据提交至后端
+                fetch('http://47.108.116.154:32122/submit-ratings', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(ratings)
+                })
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data); // 输出后端服务器响应的信息
+                    // 清空表单或显示提交成功信息
+                    form.reset();
+                    alert("提交成功！感谢您的参与！");
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert("提交失败，请稍后再试！");
+                });
+            } else {
+                // 如果表单无效，显示提示信息
+                alert("请为每张图片评分！");
+            }
+        });
+    });
+</script>
+</body>
+</html>
