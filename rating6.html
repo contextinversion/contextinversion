@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rating6: 概念替换质量评估</title>
+<style>
+    .container {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 20px;
+        text-align: center;
+    }
+    img {
+        max-width: 100%;
+        margin-bottom: 20px;
+        margin-top: 30px;
+    }
+    .rating {
+        display: inline-block;
+        unicode-bidi: bidi-override;
+        color: #888888;
+        font-size: 30px;
+        position: relative;
+        padding: 0;
+        cursor: pointer;
+    }
+    .rating > input {
+        display: none;
+    }
+    .rating > label {
+        float: right;
+        padding: 0 5px;
+        font-size: 30px;
+    }
+    .rating > label:before {
+        content: "\2605";
+    }
+    .rating > input:checked ~ label,
+    .rating:not(:checked) > label:hover ~ label {
+        color: #f7d000;
+    }
+    .rating > input:checked + label:hover,
+    .rating > input:checked ~ label:hover,
+    .rating > label:hover ~ input:checked ~ label,
+    .rating > input:checked ~ label:hover ~ label {
+        color: #ffc700;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>Rating6: 概念替换质量评估</h1>
+    <h2> Results是将Original中的V1替换成V2得到的，你觉Result是否实现了概念的替换同时还保留了Original的上下文？ </h2>
+    <h2>打完分后点击提交即可。</h2>
+    <form id="surveyForm">
+        <!-- 使用JavaScript动态生成图片和评分输入框 -->
+    </form>
+    <button id="submitButton" type="button">提交</button>
+</div>
+
+<script>
+    function getRandomElements(array, n) {
+        const result = [];
+        const arrayCopy = array.slice(); // Make a copy of the original array
+        for (let i = 0; i < n; i++) {
+            const randomIndex = Math.floor(Math.random() * arrayCopy.length);
+            result.push(arrayCopy[randomIndex]);
+            arrayCopy.splice(randomIndex, 1); // Remove the selected element to avoid duplicates
+        }
+        return result;
+    }
+    document.addEventListener("DOMContentLoaded", function() {
+        var form = document.getElementById("surveyForm");
+        var submitButton = document.getElementById("submitButton");
+
+        var images = [
+        'out6/txt_disneyv2_castlev2.jpg',
+        'out6/CI_birdv1_birdctx_huskyv2.jpg',
+        'out6/CD_birdv1_huskyv2.jpg',
+        'out6/CD_SantaClausv2_pandav2.jpg',
+        'out6/CD_Tshirtv1_cakev1.jpg',
+        'out6/CI_catv2_bearctx_bearv2.jpg',
+        'out6/txt_flowerv1_cat0.jpg',
+        'out6/CD_disneyv2_castlev2.jpg',
+        'out6/txt_fox_rainbow.jpg',
+        'out6/CD_unicorn_SantaClaus.jpg',
+        'out6/txt_catv2_bearv2.jpg',
+        'out6/CI_cakev2_cake_ctx_huskyv2.jpg',
+        'out6/CI_blueflower_rosectx_rosev2.jpg',
+        'out6/txt_dragon_valley.jpg',
+        'out6/CI_catv2_mugctx_mugv2.jpg',
+        'out6/CI_huskyv1_birdv2.jpg',
+        'out6/CD_huskyv1_birdv2.jpg',
+        'out6/txt_catv2_mugv2.jpg',
+        'out6/txt_pikachu_cake.jpg',
+        'out6/txt_SantaClausv2_pandav2.jpg',
+        'out6/CI_SantaClausv2_pandactx_pandav2.jpg',
+        'out6/CI_Tshirtv1_Tshirtctx_cakev1.jpg',
+        'out6/CD_cakev2_huskyv2.jpg',
+        'out6/txt_Tshirtv1_cakev1.jpg',
+        'out6/txt_birdv1_huskyv2.jpg',
+        'out6/txt_buddhav1_horsev2.jpg',
+        'out6/CI_dragon_dragonctx_valley.jpg',
+        'out6/CI_disneyv1_disneyctx_castlev1.jpg',
+        'out6/CD_blueflower_rosev2.jpg',
+        'out6/CI_unicorn_santactx_SantaClaus.jpg',
+        'out6/CD_catv2_bearv2.jpg',
+        'out6/CD_fox_rainbow.jpg',
+        'out6/CI_disneyv2_castlectx_castlev2.jpg',
+        'out6/txt_blueflower_rosev2.jpg',
+        'out6/CD_flowerv1_cat0.jpg',
+        'out6/txt_huskyv1_birdv2.jpg',
+        'out6/CD_dragon_valley.jpg',
+        'out6/txt_disneyv1_castlev1.jpg',
+        'out6/CI_flowerv1_flowerctx_cat0.jpg',
+        'out6/txt_cakev2_huskyv2.jpg',
+        'out6/CD_catv2_mugv2.jpg',
+        'out6/CI_pikachu_cakectx_cake.jpg',
+        'out6/CD_buddhav1_horsev2.jpg',
+        'out6/txt_unicorn_SantaClaus.jpg',
+        'out6/CI_fox_rainbowctx_rainbow.jpg',
+        'out6/CD_disneyv1_castlev1.jpg',
+        'out6/CD_pikachu_cake.jpg',
+        'out6/CI_buddhav1_buddhactx_horsev2.jpg',
+        ];
+        images=getRandomElements(images,images.length*2/3)
+        console.log(images.length)
+
+        images.forEach(function(image,index) {
+            var div = document.createElement("div");
+            var img = document.createElement("img");
+            img.src = image;
+            img.alt = image;
+            div.appendChild(img);
+
+            var label = document.createElement("label");
+            label.textContent = "评分：";
+            div.appendChild(label);
+
+            var rating = document.createElement("div");
+            rating.className = "rating";
+            for (var i = 7; i >= 1; i--) {
+                var input = document.createElement("input");
+                input.type = "radio";
+                input.id = `star${index}_${i}`; // 修改这里，添加了索引
+                input.name = image;
+                input.value = i;
+                rating.appendChild(input);
+
+                var label = document.createElement("label");
+                label.htmlFor = `star${index}_${i}`; // 修改这里，添加了索引
+                label.title = `${i} star`;
+                rating.appendChild(label);
+            }
+            div.appendChild(rating);
+
+            form.appendChild(div);
+        });
+
+        // 提交按钮点击事件处理
+        submitButton.addEventListener("click", function(event) {
+            event.preventDefault(); // 阻止默认按钮点击行为
+
+            // 检查表单是否有效
+            if (form.checkValidity()) {
+                // 收集用户评分数据
+                var ratings = {};
+                var inputs = form.querySelectorAll(".rating input:checked");
+                inputs.forEach(function(input) {
+                    ratings[input.name] = input.value;
+                });
+
+                // 发送POST请求将评分数据提交至后端
+                fetch('http://47.108.116.154:32122/submit-ratings', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(ratings)
+                })
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data); // 输出后端服务器响应的信息
+                    // 清空表单或显示提交成功信息
+                    form.reset();
+                    alert("提交成功！感谢您的参与！");
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert("提交失败，请稍后再试！");
+                });
+            } else {
+                // 如果表单无效，显示提示信息
+                alert("请为每张图片评分！");
+            }
+        });
+    });
+</script>
+</body>
+</html>
